@@ -1,19 +1,24 @@
-{% extends 'base.html' %}
-{% import 'macros.html' as macros %} 
-
-{% block title %}
-{{ super() }} Bienvenido 
-{% endblock %}
-{% block content %} 
-{% if user_ip %}
+{% extends 'base.html' %} {% import 'macros.html' as macros %} {% block title %}
+{{ super() }} Bienvenido {% endblock %} {% block content %} {% if user_ip %}
 <h1>Hello world platzi, tu ip es {{ user_ip }}</h1>
 {% else %}
 <a href="{{ url_for('index') }}">Ir a inicio</a>
 {% endif %}
-<img
-	src="{{ url_for('static', filename='images/img_1.jpg') }}"
-	alt=""
-/>
+<div class="container bg-body">
+
+	<form>
+		<div class="mb-3 form-group">
+			{{ login_form.username.label(class_="form-label") }} 
+			{{ login_form.username(class_="form_control") }}
+		</div>
+		<div class="mb-3">
+			{{ login_form.password.label(class_="form-label") }} 
+			{{ login_form.password(class_="form_control") }}
+		</div>
+	</form>
+
+</div>
+<img src="{{ url_for('static', filename='images/img_1.jpg') }}" alt="" />
 <ul>
 	{% for todo in todos %} {{ macros.render_todo(todo) }} {% endfor%}
 </ul>
