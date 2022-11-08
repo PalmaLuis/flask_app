@@ -1,0 +1,13 @@
+html {
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+img {
+	width: 100px;
+	height: auto;
+}
+.boton {
+	background-color: rgb(177, 177, 177);
+	border: none;
+	border-radius: 10px;
+	padding: 5px 30px;
+}

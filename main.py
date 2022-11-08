@@ -1,21 +1,18 @@
-from flask import Flask, request, make_response, redirect, render_template, session
+from flask import Flask, request, flash,url_for,make_response, redirect, render_template, session
 from flask_bootstrap import Bootstrap5
-from flask_wtf import FlaskForm
-from wtforms.fields import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired
+import unittest
+from app import create_app
+from app.forms import LoginForm
 
-app = Flask(__name__)
-bootstrap = Bootstrap5(app)
-
-app.config['SECRET_KEY'] = 'SUPER SECRETO'
+app = create_app()
 
 todo = ['Comprar café','Enviar solicitud de compra ','Entregar producto']
 
-class LoginForm(FlaskForm):
-  username = StringField('Nombre de usuario', validators=[DataRequired()])
-  password = PasswordField('Password', validators=[DataRequired()])
-  submit = SubmitField('Enviar')
 
+@app.cli.command()
+def test():
+  tests = unittest.TestLoader().discover('test')
+  unittest.TextTestRunner().run(tests)
 
 @app.errorhandler(404)
 def not_found(error):
@@ -30,15 +27,25 @@ def index():
   session['user_ip']=user_ip
   return response
 
-@app.route('/hello')
+@app.route('/hello', methods=['GET','POST'])
 def hello():
   user_ip=session.get('user_ip')
-  login_form = LoginForm()
+  form=LoginForm(request.form)
+  username = form.username.data
+
   context ={
     'user_ip': user_ip,
     'todos': todo,
-    'login_form':login_form
+    'login_form':form,
+    'username':username
   }
+
+  if request.method =='POST':
+    username = form.username.data
+    session['username']=username
+    flash('Nombre se usuario registrado con exito')
+    return redirect(url_for('hello'))
+
   return render_template('hello.html',**context)
 
 if __name__ == '__main__':
